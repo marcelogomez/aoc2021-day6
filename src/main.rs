@@ -3,6 +3,9 @@
 
 use std::{io::BufRead, str::FromStr};
 
+const COUNTER_RESET_VALUE: usize = 6;
+const NEW_FISH_COUNTER_VALUE: usize = 8;
+
 #[derive(Debug, Clone, Copy)]
 struct LanternFish {
     counter: usize,
@@ -11,6 +14,17 @@ struct LanternFish {
 impl LanternFish {
     pub fn new(counter: usize) -> Self {
         Self { counter }
+    }
+
+    pub fn advance_counter(&mut self) -> Option<LanternFish> {
+        if self.counter > 0 {
+            self.counter -= 1;
+            None
+        } else {
+            // We've hit the end of our counter, time to reproduce!
+            self.counter = COUNTER_RESET_VALUE;
+            Some(LanternFish::new(NEW_FISH_COUNTER_VALUE))
+        }
     }
 }
 
