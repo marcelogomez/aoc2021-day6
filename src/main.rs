@@ -34,12 +34,26 @@ fn parse_input_line(s: &str) -> anyhow::Result<Vec<LanternFish>> {
         .collect::<Result<_, _>>()?)
 }
 
+fn solve_part_1(mut fish: Vec<LanternFish>) -> Vec<LanternFish> {
+    (0..80).for_each(|_| {
+        let new_fish = fish
+            .iter_mut()
+            .filter_map(|f| f.advance_counter())
+            .collect::<Vec<LanternFish>>();
+
+        fish.extend(new_fish);
+    });
+
+    fish
+}
+
 fn main_impl() -> anyhow::Result<()> {
     let mut line = String::new();
     std::io::stdin().lock().read_line(&mut line)?;
 
-    let fish = parse_input_line(&line);
-    println!("Parsed input {:#?}", fish);
+    let fish = parse_input_line(&line)?;
+
+    println!("Part 1 solution {}", solve_part_1(fish).len());
 
     Ok(())
 }
