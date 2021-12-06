@@ -30,11 +30,11 @@ fn num_fish_after_impl(counter: usize, days: usize) -> usize {
 }
 
 #[derive(Debug, Clone, Copy)]
-struct LanternFish {
+struct Lanternfish {
     counter: usize,
 }
 
-impl LanternFish {
+impl Lanternfish {
     pub fn new(counter: usize) -> Self {
         Self { counter }
     }
@@ -46,9 +46,9 @@ impl LanternFish {
     }
 }
 
-fn parse_input_line(s: &str) -> anyhow::Result<Vec<LanternFish>> {
+fn parse_input_line(s: &str) -> anyhow::Result<Vec<Lanternfish>> {
     Ok(s.split(',')
-        .map(|n| usize::from_str(n).map(LanternFish::new))
+        .map(|n| usize::from_str(n).map(Lanternfish::new))
         .collect::<Result<_, _>>()?)
 }
 
@@ -85,16 +85,16 @@ mod tests {
 
     #[test]
     fn test_num_fish_after() {
-        assert_eq!(LanternFish::new(3).num_fish_after(1), 1);
+        assert_eq!(Lanternfish::new(3).num_fish_after(1), 1);
     }
 
     #[test]
     fn test_num_fish_after_counter_hits_zero() {
-        assert_eq!(LanternFish::new(3).num_fish_after(3), 1);
+        assert_eq!(Lanternfish::new(3).num_fish_after(3), 1);
     }
 
     #[test]
     fn test_num_fish_after_counter_passes_zero() {
-        assert_eq!(LanternFish::new(3).num_fish_after(4), 2);
+        assert_eq!(Lanternfish::new(3).num_fish_after(4), 2);
     }
 }
