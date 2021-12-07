@@ -66,7 +66,7 @@ fn num_fish_after_impl(counter: usize, days: usize) -> usize {
         // Recursion!
         .map(|creation_day| num_fish_after_impl(8, days.saturating_sub(creation_day)))
         // Add it all up
-        .fold(0, |sum, num_children| sum + num_children)
+        .sum::<usize>()
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -100,9 +100,7 @@ fn main_impl() -> anyhow::Result<()> {
 
     println!(
         "Part 1 solution {}",
-        fish.iter()
-            .map(|f| f.num_fish_after(80))
-            .fold(0, |sum, fish_count| sum + fish_count),
+        fish.iter().map(|f| f.num_fish_after(80)).sum::<usize>()
     );
 
     println!(
@@ -112,9 +110,7 @@ fn main_impl() -> anyhow::Result<()> {
 
     println!(
         "Part 2 solution {}",
-        fish.iter()
-            .map(|f| f.num_fish_after(256))
-            .fold(0, |sum, fish_count| sum + fish_count),
+        fish.iter().map(|f| f.num_fish_after(256)).sum::<usize>()
     );
 
     println!(
