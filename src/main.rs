@@ -2,7 +2,47 @@
 // https://adventofcode.com/2021/day/6
 
 use cached::proc_macro::cached;
+use std::collections::BTreeMap;
 use std::{io::BufRead, str::FromStr};
+
+fn next_day_counts(current_state: BTreeMap<usize, usize>) -> BTreeMap<usize, usize> {
+    let mut result: BTreeMap<usize, usize> = (0..=8).map(|i| (i, 0)).collect();
+
+    current_state.iter().for_each(|(counter, count)| {
+        match counter.checked_sub(1) {
+            Some(new_counter) => {
+                // Move this count to the new counter
+                result.entry(new_counter).and_modify(|c| *c += count);
+            }
+            None => {
+                // Reset the counters
+                result.entry(6).and_modify(|c| *c += count);
+
+                // Create new fish
+                result.entry(8).and_modify(|c| *c += count);
+            }
+        };
+    });
+
+    result
+}
+
+fn counting_solution(fish: &[Lanternfish], days: usize) -> usize {
+    // Create a map of counter to num of fish with that counter
+    let mut counter_to_count: BTreeMap<usize, usize> = BTreeMap::new();
+    fish.iter().for_each(|f| {
+        counter_to_count
+            .entry(f.counter)
+            .and_modify(|c| *c += 1)
+            .or_insert(1);
+    });
+
+    for _ in 0..days {
+        counter_to_count = next_day_counts(counter_to_count);
+    }
+
+    counter_to_count.values().sum()
+}
 
 /// Calculates how many fish we would end up with after <days> days
 /// starting from a fish with the given counter
@@ -31,7 +71,7 @@ fn num_fish_after_impl(counter: usize, days: usize) -> usize {
 
 #[derive(Debug, Clone, Copy)]
 struct Lanternfish {
-    counter: usize,
+    pub counter: usize,
 }
 
 impl Lanternfish {
@@ -66,10 +106,20 @@ fn main_impl() -> anyhow::Result<()> {
     );
 
     println!(
+        "Part 1 solution (counting) {}",
+        counting_solution(&fish, 80),
+    );
+
+    println!(
         "Part 2 solution {}",
         fish.iter()
             .map(|f| f.num_fish_after(256))
             .fold(0, |sum, fish_count| sum + fish_count),
+    );
+
+    println!(
+        "Part 2 solution (counting) {}",
+        counting_solution(&fish, 256),
     );
 
     Ok(())
